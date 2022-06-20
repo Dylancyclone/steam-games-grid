@@ -1,0 +1,12 @@
+{
+	"endOfLine": "auto",
+	"trailingComma": "es5",
+	"semi": false,
+	"useTabs": true,
+	"arrowParens": "avoid",
+	"pugPrintWidth": 1000000,
+	"pugUseTabs": true,
+	"pugAttributeSeparator": "none",
+	"pugClosingBracketPosition": "last-line",
+	"pugEmptyAttributes": "none"
+}
