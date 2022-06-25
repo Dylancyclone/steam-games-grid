@@ -83,6 +83,22 @@ module.exports = configure(function (ctx) {
 			},
 			port: 8080,
 			open: true, // opens browser window automatically
+			proxy: {
+				"/api": {
+					target: "http://api.steampowered.com",
+					changeOrigin: true,
+					pathRewrite: {
+						"^/api": "",
+					},
+				},
+				"/storeapi": {
+					target: "https://store.steampowered.com/api/",
+					changeOrigin: true,
+					pathRewrite: {
+						"^/storeapi": "",
+					},
+				},
+			},
 		},
 
 		// https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
@@ -102,7 +118,7 @@ module.exports = configure(function (ctx) {
 			// directives: [],
 
 			// Quasar plugins
-			plugins: [],
+			plugins: ["Dialog", "Loading"],
 		},
 
 		// animations: 'all', // --- includes all animations
