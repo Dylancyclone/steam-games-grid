@@ -47,11 +47,10 @@ export default defineComponent({
 	},
 	mounted() {
 		axios("/api/ISteamApps/GetAppList/v0002/").then(response => {
-			this.allApps = response.data.applist.apps
-			// this.allApps.forEach(el => (el.filePrepared = fuzzysort.prepare(el.name)))
-			console.log(this.allApps[0])
-			console.log(isProxy(this.allApps[0]))
-			console.log(toRaw(this.allApps[0]))
+			// Remove duplicates
+			this.allApps = [
+				...new Map(response.data.applist.apps.map(v => [v.appid, v])).values(),
+			]
 
 			if (this.$route.params.data) {
 				this.gameIds = this.$route.params.data
@@ -88,7 +87,6 @@ export default defineComponent({
 								key: "name",
 								limit: 1,
 							})[0]
-							// console.log(test)
 							if (!!test?.obj) {
 								this.gameIds.push(test.obj.appid)
 							} else {

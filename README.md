@@ -1,5 +1,7 @@
 # Steam Games Grid (steam-games-grid)
 
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/dylancyclone/steam-games-grid/Build%20and%20Deploy)
+
 Display Steam games in a visual grid layout
 
 ## Install the dependencies

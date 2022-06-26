@@ -1,0 +1,62 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: ./Dockerfile
+          builder: ${{ steps.buildx.outputs.name }}
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/steam-games-grid:latest
+          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/steam-games-grid:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/steam-games-grid:buildcache,mode=max
+  # build-and-deploy:
+  #   concurrency: ci-${{ github.ref }}
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #     - name: Setup Node.js environment
+  #       uses: actions/setup-node@v3.3.0
+  #     - name: Cache
+  #       uses: actions/cache@v3.0.4
+  #       with:
+  #         path: ~/.npm
+  #         key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-node-
+
+  #     - name: Build Vue
+  #       run: |
+  #         npm install -g @quasar/cli
+  #         yarn install --frozen-lockfile
+  #         quasar build
+
+  #     - name: Deploy
+  #       uses: JamesIves/github-pages-deploy-action@v4.3.3
+  #       with:
+  #         branch: gh-pages
+  #         folder: dist/spa/
